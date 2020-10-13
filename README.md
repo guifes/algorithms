@@ -1,4 +1,1 @@
-ProjectEuler
-============
-
-Project Euler problem solutions
+Algorithms and Challenge Solutions

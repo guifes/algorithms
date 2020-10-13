@@ -5,16 +5,19 @@
 int circularOrderedArraySearch(int number, int array[], int size);
 int *generateCircularSortedArray(int size, int offset);
 
-main()
+int iterations = 0;
+
+int main()
 {
-    int array[] = {6, 7, 1, 2, 3, 4, 5};
+    int array1[] = {6, 7, 1, 2, 3, 4, 5};
     int array2[] = {5, 1, 2, 3, 4};
     int array3[] = {1, 2, 3, 4, 5, 6, 7, 10, 12, 13};
+    int array5[] = {6, 7, 8, 9, 1, 2, 3, 4, 5 };
 
     int *array4 = generateCircularSortedArray(10000, 245);
 
-    circularOrderedArraySearch(10, array, 7);
-    circularOrderedArraySearch(7, array, 7);
+    circularOrderedArraySearch(10, array1, 7);
+    circularOrderedArraySearch(7, array1, 7);
     circularOrderedArraySearch(5, array2, 5);
     circularOrderedArraySearch(10, array3, 10);
     circularOrderedArraySearch(11, array3, 10);
@@ -27,68 +30,53 @@ main()
 }
 
 // Recursive binary search in circular ascending order array
-int circularOrderedArraySearch(int number, int array[], int size)
+int circularOrderedArraySearch(int number, int arr[], int size)
 {
-    printf("- ");
+    iterations++;
 
-    int last = (size - 1); // last index of array
-    int middle = last / 2; // middle index of array
-    int halfSize = size / 2; // half the size of array
+    int last = (size - 1);
+    int middle = last / 2;
+    int firstHalfSize = middle + 1;
+    int secondHalfSize = last - middle;
 
-    if(array[middle] == number) // check if middle index is searched number
+    if(arr[0] == number)
     {
         printf("Found %d in array\n", number);
 
         return 1;
     }
 
-    if(size == 1) // check if there is only 1 element in array
+    if(size == 1)
     {
         printf("Didn't find %d in array\n", number);
 
         return 0;
     }
 
-    if(array[middle] < array[0]) // check if right half of array is ordered
+    if(arr[0] <= arr[middle] && number >= arr[0] && number <= arr[middle])
     {
-        if(number >= array[middle + 1] && number <= array[last]) // check if number is contained in right half of array
-        {
-            return circularOrderedArraySearch(number, &array[middle + 1], halfSize); // search for number recursively in right half of array, in this case a normal binary search
-        }
-        else
-        {
-            return circularOrderedArraySearch(number, array, middle); // search for number recursively in left half of array
-        }
+        return circularOrderedArraySearch(number, arr, firstHalfSize);
     }
-
-    if(array[last] < array[middle])// check if left half of array is ordered
+    else if(arr[middle] <= arr[last] && number >= arr[firstHalfSize] && number <= arr[last])
     {
-        if(number >= array[0] && number <= array[middle])// check if number is contained in left half of array
-        {
-            return circularOrderedArraySearch(number, array, middle); // search for number recursively in left half of array, in this case a normal binary search
-        }
-        else
-        {
-            return circularOrderedArraySearch(number, &array[middle + 1], halfSize); // search for number recursively in right half of array
-        }
-    }
-
-    if(number >= array[0] && number <= array[last]) // if number is in array, normal binary search
-    {
-        if(array[middle] > number)
-        {
-            return circularOrderedArraySearch(number, array, middle);
-        }
-        else
-        {
-            return circularOrderedArraySearch(number, &array[middle + 1], halfSize);
-        }
+        return circularOrderedArraySearch(number, &arr[firstHalfSize], secondHalfSize);
     }
     else
     {
-        printf("Didn't find %d in array\n", number);
+        if(arr[0] > arr[middle])
+        {
+            return circularOrderedArraySearch(number, arr, firstHalfSize);
+        }
+        else if(arr[middle] > arr[last])
+        {
+            return circularOrderedArraySearch(number, &arr[firstHalfSize], secondHalfSize);
+        }
+        else
+        {
+            printf("Didn't find %d in array\n", number);
 
-        return 0;
+            return 0;
+        }
     }
 
     return 0;
